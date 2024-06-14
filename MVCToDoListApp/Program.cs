@@ -1,7 +1,18 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using MVCToDoListApp.Models;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// �K�[�ƾڮw�W�U��
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// �K�[ Identity �A��
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+	.AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
 
@@ -13,12 +24,14 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); 
 app.UseStaticFiles();
-
 app.UseRouting();
 
+
 app.UseAuthorization();
+app.UseAuthorization();
+app.MapRazorPages();
 
 app.MapControllerRoute(
 	name: "default",
